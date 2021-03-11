@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gmail API Quickstart</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" 
+    integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <style>
+      body{margin-top:20px;}
+.email-app {
+    display: flex;
+    flex-direction: row;
+    background: #fff;
+    border: 1px solid #e1e6ef;
+}
+
+.email-app nav {
+    flex: 0 0 200px;
+    padding: 1rem;
+    border-right: 1px solid #e1e6ef;
+}
+
+.email-app nav .btn-block {
+    margin-bottom: 15px;
+}
+
+.email-app nav .nav {
+    flex-direction: column;
+}
+
+.email-app nav .nav .nav-item {
+    position: relative;
+}
+
+.email-app nav .nav .nav-item .nav-link,
+.email-app nav .nav .nav-item .navbar .dropdown-toggle,
+.navbar .email-app nav .nav .nav-item .dropdown-toggle {
+    color: #151b1e;
+    border-bottom: 1px solid #e1e6ef;
+}
+
+.email-app nav .nav .nav-item .nav-link i,
+.email-app nav .nav .nav-item .navbar .dropdown-toggle i,
+.navbar .email-app nav .nav .nav-item .dropdown-toggle i {
+    width: 20px;
+    margin: 0 10px 0 0;
+    font-size: 14px;
+    text-align: center;
+}
+
+.email-app nav .nav .nav-item .nav-link .badge,
+.email-app nav .nav .nav-item .navbar .dropdown-toggle .badge,
+.navbar .email-app nav .nav .nav-item .dropdown-toggle .badge {
+    float: right;
+    margin-top: 4px;
+    margin-left: 10px;
+}
+
+.email-app main {
+    min-width: 0;
+    flex: 1;
+    padding: 1rem;
+}
+
+.email-app .inbox .toolbar {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e1e6ef;
+}
+
+.email-app .inbox .messages {
+    padding: 0;
+    list-style: none;
+}
+
+.email-app .inbox .message {
+    position: relative;
+    padding: 1rem 1rem 1rem 2rem;
+    cursor: pointer;
+    border-bottom: 1px solid #e1e6ef;
+}
+
+.email-app .inbox .message:hover {
+    background: #f9f9fa;
+}
+
+.email-app .inbox .message .actions {
+    position: absolute;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.email-app .inbox .message .actions .action {
+    width: 2rem;
+    margin-bottom: 0.5rem;
+    color: #c0cadd;
+    text-align: center;
+}
+
+.email-app .inbox .message a {
+    color: #000;
+}
+
+.email-app .inbox .message a:hover {
+    text-decoration: none;
+}
+
+.email-app .inbox .message.unread .header,
+.email-app .inbox .message.unread .title {
+    font-weight: bold;
+}
+
+.email-app .inbox .message .header {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 0.5rem;
+}
+
+.email-app .inbox .message .header .date {
+    margin-left: auto;
+}
+
+.email-app .inbox .message .title {
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.email-app .inbox .message .description {
+    font-size: 12px;
+}
+
+.email-app .message .toolbar {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e1e6ef;
+}
+
+.email-app .message .details .title {
+    padding: 1rem 0;
+    font-weight: bold;
+}
+
+.email-app .message .details .header {
+    display: flex;
+    padding: 1rem 0;
+    margin: 1rem 0;
+    border-top: 1px solid #e1e6ef;
+    border-bottom: 1px solid #e1e6ef;
+}
+
+.email-app .message .details .header .avatar {
+    width: 40px;
+    height: 40px;
+    margin-right: 1rem;
+}
+
+.email-app .message .details .header .from {
+    font-size: 12px;
+    color: #9faecb;
+    align-self: center;
+}
+
+.email-app .message .details .header .from span {
+    display: block;
+    font-weight: bold;
+}
+
+.email-app .message .details .header .date {
+    margin-left: auto;
+}
+
+.email-app .message .details .attachments {
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+    border-top: 3px solid #f9f9fa;
+    border-bottom: 3px solid #f9f9fa;
+}
+
+.email-app .message .details .attachments .attachment {
+    display: flex;
+    margin: 0.5rem 0;
+    font-size: 12px;
+    align-self: center;
+}
+
+.email-app .message .details .attachments .attachment .badge {
+    margin: 0 0.5rem;
+    line-height: inherit;
+}
+
+.email-app .message .details .attachments .attachment .menu {
+    margin-left: auto;
+}
+
+.email-app .message .details .attachments .attachment .menu a {
+    padding: 0 0.5rem;
+    font-size: 14px;
+    color: #e1e6ef;
+}
+
+@media (max-width: 767px) {
+    .email-app {
+        flex-direction: column;
+    }
+    .email-app nav {
+        flex: 0 0 100%;
+    }
+}
+
+@media (max-width: 575px) {
+    .email-app .message .header {
+        flex-flow: row wrap;
+    }
+    .email-app .message .header .date {
+        flex: 0 0 100%;
+    }
+}
+
+    </style>
+  </head>
+  <body>
+    <p>Gmail API Quickstart</p>
+
+    <!--Add buttons to initiate auth sequence and sign out-->
+   
+   <pre id="content" style="white-space: pre-wrap"></pre>
+     
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    
+
+    <div id="master">
+      <button id="authorize_button" style="display: none;">Authorize</button>
+    </div>
+    
+  </div>
+
+    <script type="text/javascript">
+      // Client ID and API key from the Developer Console
+      var CLIENT_ID =
+        "801580979228-64l3rl3s7jebhu22m74ph6grsbb371oi.apps.googleusercontent.com";
+
+      var API_KEY = "AIzaSyBEMoFFsDP5tMzrNpXkWS-KFk0fq0kbD-0";
+
+      // Array of API discovery doc URLs for APIs used by the quickstart
+      var DISCOVERY_DOCS = [
+        "https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest",
+      ];
+
+      // Authorization scopes required by the API; multiple scopes can be
+      // included, separated by spaces.
+      var SCOPES = "https://mail.google.com/";
+       
+      var master=document.getElementById("master")
+      l(master);
+      var authorizeButton = document.getElementById("authorize_button");
+      console.log(authorizeButton)
+      var signoutButton = document.getElementById("signout_button");
+
+      /**
+       *  On load, called to load the auth2 library and API client library.
+       */
+      function handleClientLoad() {
+        gapi.load("client:auth2", initClient);
+      }
+
+      /**
+       *  Initializes the API client library and sets up sign-in state
+       *  listeners.
+       */
+      function initClient() {
+        gapi.client
+          .init({
+            apiKey: API_KEY,
+            clientId: CLIENT_ID,
+            discoveryDocs: DISCOVERY_DOCS,
+            scope: SCOPES,
+          })
+          .then(
+            function () {
+              // Listen for sign-in state changes.
+              gapi.auth2
+                .getAuthInstance()
+                .isSignedIn.listen(updateSigninStatus);
+
+              // Handle the initial sign-in state.
+              updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+              authorizeButton.onclick = handleAuthClick;
+              signoutButton.onclick = handleSignoutClick;
+            },
+            function (error) {
+              appendPre(JSON.stringify(error, null, 2));
+            }
+          );
+      }
+
+      /**
+       *  Called when the signed in status changes, to update the UI
+       *  appropriately. After a sign-in, the API is called.
+       */
+      function updateSigninStatus(isSignedIn) {
+        if (isSignedIn) {
+          authorizeButton.style.display = "none";
+          signoutButton.style.display = "block";
+          sendEmail(gapi);
+        } else {
+          authorizeButton.style.display = "block";
+          signoutButton.style.display = "none";
+        }
+      }
+
+      /**
+       *  Sign in the user upon button click.
+       */
+      function handleAuthClick(event) {
+        gapi.auth2.getAuthInstance().signIn();
+      }
+
+      /**
+       *  Sign out the user upon button click.
+       */
+      function handleSignoutClick(event) {
+        gapi.auth2.getAuthInstance().signOut();
+      }
+
+      /**
+       * Append a pre element to the body containing the given message
+       * as its text node. Used to display the results of the API call.
+       *
+       * @param {string} message Text to be placed in pre element.
+       */
+      function appendPre(message) {
+        var pre = document.getElementById("content");
+        var textContent = document.createTextNode(message + "\n");
+        pre.appendChild(textContent);
+      }
+
+      /**
+       * Print all Labels in the authorized user's inbox. If no labels
+       * are found an appropriate message is printed.
+       */
+      function listLabels() {
+        gapi.client.gmail.users.labels
+          .list({
+            userId: "me",
+          })
+          .then(function (response) {
+            var labels = response.result.labels;
+            appendPre("Labels:");
+            if (labels && labels.length > 0) {
+              for (i = 0; i < labels.length; i++) {
+                var label = labels[i];
+                appendPre(label.name);
+              }
+            } else {
+              appendPre("No Labels found.");
+            }
+          });
+      }
+
+      function sendEmail(gapi) {
+        var butt = document.getElementById("send-button");
+        butt.addEventListener("click", () => {
+          var receiver = document.getElementById("to").value;
+          var sub = document.getElementById("cc").value;
+          var mess = document.getElementById("message").value;
+         console.log(receiver,sub,mess)
+          const message =
+          "From: perhaw11@gmail.com"+"\r\n" +
+          "To: "+receiver+"\r\n" +
+          "Subject: "+sub+"\r\n\r\n" +
+          mess;
+
+        // The body needs to be base64url encoded.
+        const encodedMessage = btoa(message);
+
+        const m = encodedMessage
+          .replace(/\+/g, "-")
+          .replace(/\//g, "_")
+          .replace(/=+$/, "");
+        gapi.client.gmail.users.messages
+          .send({
+            userId: "me",
+            resource: {
+              raw: m,
+            },
+          })
+          .then((a) => {
+            console.log(a);
+          })
+          .catch((a) => {});
+      });
+   
+
+      var inbox=document.getElementById("inbox");
+      inbox.addEventListener("click", ()=>{
+        gapi.client.gmail.users.messages.list({"userId":"me"})
+        .then((a)=>{
+          console.log(a.result)
+          var arr=a.result.messages;
+         
+          for(var i=0;i<arr.length;i++){
+           
+              gapi.client.gmail.users.messages.get({"userId":"me", "id":arr[i].id})
+              .then((a)=>{
+                var table=document.createElement("table");
+          table.setAttribute("border", "1px solid black");
+               var x=a.result.payload.headers
+               var tr=document.createElement("tr");
+               tr.setAttribute("class", "table table-borderless")
+               console.log(x);
+               for(var j=0;j<x.length;j++){
+                
+                console.log(x[j].name)
+                 if(x[j].name==="To"){
+                  var td=document.createElement("td");
+                      td.innerHTML="To:"+x[j].value;
+                      tr.append(td)
+                 }else if(x[j].name==="From"){
+                  var td=document.createElement("td");
+                      td.innerHTML="From:"+x[j].value;
+                      tr.append(td)
+                 }else if(x[j].name==="Subject"){
+                  var td=document.createElement("td");
+                    td.innerHTML="Subject:"+x[j].value;
+                    tr.append(td)
+                 }
+               }
+               
+               table.append(tr);
+               var xx=document.getElementById("main");
+               xx.appendChild(table)
+              }).catch((a)=>{})
+            }
+        })
+      })
+      }
+
+      function l(mas){
+        var div1=document.createElement("div");
+div1.setAttribute("class", "container bootdey")
+var div2=document.createElement("div");
+div2.setAttribute("class","email-app")
+div2.setAttribute("id", "email-app")
+
+var nav=document.createElement("nav"); 
+nav.setAttribute("class","nav")
+
+var ul=document.createElement("ul");
+ul.setAttribute("class","nav")
+
+var li1=document.createElement("li");
+li1.setAttribute("class","nav-item")
+var b1=document.createElement("button");
+b1.setAttribute("class","btn btn-light")
+b1.setAttribute("id", "inbox")
+b1.innerHTML="inbox";
+
+var li2=document.createElement("li");
+li2.setAttribute("class","nav-item")
+var b2=document.createElement("button");
+b2.setAttribute("class","btn btn-light")
+b2.setAttribute("id", "sent")
+b2.innerHTML="sent"
+
+var li3=document.createElement("li");
+li3.setAttribute("class","nav-item")
+var b3=document.createElement("button");
+b3.setAttribute("class","btn btn-light")
+b3.setAttribute("id", "draft")
+b3.innerHTML="draft";
+
+nav.appendChild(ul)
+li1.appendChild(b1);
+li2.appendChild(b2);
+li3.appendChild(b3)
+ul.append(li1,li2,li3);
+
+var main=document.createElement("main");
+main.setAttribute("id", "main")
+
+
+var p=pa();
+var form=f();
+var d1=lower();
+
+main.append(p,form,d1);
+div2.append(nav,main);
+div1.append(div2);
+mas.append(div1);
+      }
+    
+  function f(){
+    var form=document.createElement("form");
+
+var formdiv1=document.createElement("div");
+formdiv1.setAttribute("class","form-row mb-3")
+
+var label1=document.createElement("label"); 
+label1.setAttribute("for","to")
+label1.setAttribute("class","col-2 col-sm-1 col-form-label")
+label1.innerHTML='To'
+
+var inputdiv1=document.createElement("div");
+inputdiv1.setAttribute("class","col-10 col-sm-11")
+
+var input1=document.createElement("input");
+input1.setAttribute("type","email")
+input1.setAttribute("class","form-control")
+input1.setAttribute("placeholder","Type-email")
+input1.setAttribute("id", "to");
+
+inputdiv1.appendChild(input1);
+
+formdiv1.append(label1, inputdiv1);
+
+var formdiv2=document.createElement("div");
+formdiv2.setAttribute("class","form-row mb-3")
+
+var label2=document.createElement("label"); 
+label2.setAttribute("for","to")
+label2.setAttribute("class","col-2 col-sm-1 col-form-label")
+label2.innerHTML='Subject'
+
+var inputdiv2=document.createElement("div");
+inputdiv2.setAttribute("class","col-10 col-sm-11")
+
+var input2=document.createElement("input");
+input2.setAttribute("type","email")
+input2.setAttribute("class","form-control")
+input2.setAttribute("placeholder","Subject")
+input2.setAttribute("id", "cc");
+
+inputdiv2.appendChild(input2);
+
+formdiv2.append(label2, inputdiv2);
+
+form.append(formdiv1, formdiv2);
+return form;
+  }
+  function pa(){
+    var p=document.createElement("p");
+p.setAttribute("class","text-center");
+p.innerHTML="New Message";
+return p
+  }
+  function lower(){
+    var d1=document.createElement("div");
+d1.setAttribute("class","row")
+
+var d2=document.createElement("div");
+d2.setAttribute("class","col-sm-11 ml-auto")
+
+var d3=document.createElement("div");
+d3.setAttribute("class","form-group mt-4")
+
+var t=document.createElement("textarea");
+t.setAttribute("class","form-group mt-4")
+t.setAttribute("class","form-control")
+t.setAttribute("id","message")
+t.setAttribute("name","body")
+t.setAttribute("rows","12")
+t.setAttribute("placeholder","Click here to reply")
+
+d3.appendChild(t);
+
+var d4=document.createElement("div");
+d4.setAttribute("class","form-group")
+
+var bt1=document.createElement("button");
+bt1.setAttribute("class","btn btn-success")
+bt1.setAttribute("id", "send-button")
+bt1.innerHTML="send";
+
+var bt2=document.createElement("button");
+bt2.setAttribute("class","btn btn-light")
+bt2.setAttribute("id", "send-draft")
+bt2.innerHTML="draft";
+
+var bt3=document.createElement("button");
+bt3.setAttribute("class","btn btn-danger")
+bt3.setAttribute("id", "send-discard")
+bt3.innerHTML="discard";
+
+
+
+var bt5=document.createElement("button");
+bt5.setAttribute("class","btn btn-success")
+bt5.setAttribute("type", "button")
+bt5.setAttribute("id", "signout_button")
+bt5.setAttribute("display", "none")
+bt5.innerHTML="signout";
+
+d4.append(bt1,bt2,bt3,bt3,bt5);
+d2.append(d3,d4);
+d1.appendChild(d2)
+
+return d1;
+  }
+    </script>
+
+    <script
+      async
+      defer
+      src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()"
+    ></script>
+  </body>
+</html>
